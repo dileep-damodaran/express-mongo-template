@@ -1,0 +1,20 @@
+[{
+        "name": "system_admin",
+        "display_name": "System Administrator",
+        "description": "System administrator manages the entire system",
+        "scope": "ROOT",
+        "permissions": [
+            "system.manage"
+        ],
+        "active": true
+    },
+    {
+        "name": "end_user",
+        "display_name": "End User",
+        "description": "",
+        "scope": "TENANT",
+        "permissions": [],
+        "active": true
+    }
+
+]

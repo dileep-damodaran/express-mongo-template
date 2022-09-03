@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ValidationError } from "express-validation";
+import { AppResponse } from "../utils/customResponse";
 import logger from "../utils/logger";
 const createError = require("http-errors");
 
@@ -21,10 +22,18 @@ const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    const error = { ...err }; //Winston changees the error object, hence deep cloning to preserve original error object
-    logger.error(error);
+    logger.error({ ...err }); //Winston changees the error object, hence deep cloning to preserve original error object
     const statusCode = err.statusCode || err.metadata.statusCode;
-    return res.status(statusCode).json(err);
+    let errorMessage = err.message;
+
+    console.log(err);
+
+    if (err.name === "ValidationError" && err.details && err.details.body) {
+        errorMessage = err.details.body.map((x) => x.message).join(",");
+    }
+
+    const result = new AppResponse(false, null, errorMessage);
+    return res.status(statusCode).send(result);
 };
 
 export { errorConverter, errorHandler };
